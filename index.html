@@ -1,0 +1,523 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Cloth Management System</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <!-- Navigation Bar -->
+    <nav class="navbar">
+        <div class="nav-container">
+            <div class="logo">👗 ClothHub</div>
+            <div class="nav-buttons">
+                <div class="wishlist-nav">
+                    <button class="nav-btn" id="wishlistToggleBtn">
+                        🛍️ My Wishlist <span id="wishlistCount" class="wishlist-badge">0</span>
+                    </button>
+                </div>
+                <button class="nav-btn" id="aboutShopBtn" onclick="openShopInfo()">ℹ️ About Shop</button>
+                <button class="nav-btn" id="logoutBtn" style="display: none;">Logout</button>
+                <button class="nav-btn active" id="switchRoleBtn">Switch to Owner</button>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Owner Login Modal -->
+    <div id="ownerLoginModal" class="modal">
+        <div class="modal-content">
+            <h2>Owner Login</h2>
+            <form id="ownerLoginForm">
+                <input type="text" id="ownerUsername" placeholder="Username" required>
+                <input type="password" id="ownerPassword" placeholder="Password" required>
+                <button type="submit" class="btn btn-primary">Login</button>
+                <p class="hint">Demo: Username: admin | Password: admin123</p>
+            </form>
+        </div>
+    </div>
+
+    <!-- Shop Information Modal -->
+    <div id="shopInfoModal" class="modal">
+        <div class="modal-content shop-info-modal">
+            <button class="close-btn" onclick="closeShopInfo()">&times;</button>
+            <div class="shop-info-container">
+                <div class="shop-header">
+                    <h1>👗 ClothHub</h1>
+                    <p class="tagline">Your Premium Destination for Quality Fashion</p>
+                </div>
+
+                <div class="shop-content">
+                    <section class="info-section">
+                        <h2>📖 About Us</h2>
+                        <p>ClothHub is a premium online clothing destination dedicated to bringing you the finest collection of fashion items. With over a decade of experience in the fashion industry, we pride ourselves on quality, style, and exceptional customer service.</p>
+                    </section>
+
+                    <section class="info-section">
+                        <h2>✨ Why Choose Us</h2>
+                        <ul class="features-list">
+                            <li>🎯 Curated Collection - Handpicked items from top brands</li>
+                            <li>💯 Quality Assured - Every product is quality checked</li>
+                            <li>🚚 Fast Delivery - Quick and reliable shipping worldwide</li>
+                            <li>💝 Best Prices - Competitive pricing with regular discounts</li>
+                            <li>⭐ Customer Support - 24/7 dedicated support team</li>
+                            <li>🔄 Easy Returns - Hassle-free return policy</li>
+                        </ul>
+                    </section>
+
+                    <section class="info-section">
+                        <h2>📍 Our Location</h2>
+                        <p><strong>Address:</strong> 123 Fashion Street, Style City, Fashion District</p>
+                        <p><strong>Phone:</strong> +1 (800) 123-4567</p>
+                        <p><strong>Email:</strong> info@clothhub.com</p>
+                    </section>
+
+                    <section class="info-section">
+                        <h2>⏰ Business Hours</h2>
+                        <p>Monday - Friday: 9:00 AM - 6:00 PM</p>
+                        <p>Saturday: 10:00 AM - 5:00 PM</p>
+                        <p>Sunday: Closed</p>
+                    </section>
+
+                    <section class="info-section">
+                        <h2>🌐 Follow Us</h2>
+                        <div class="social-links">
+                            <a href="#" class="social-btn">Facebook</a>
+                            <a href="#" class="social-btn">Instagram</a>
+                            <a href="#" class="social-btn">Twitter</a>
+                        </div>
+                    </section>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- User Section -->
+    <section id="userSection" class="section active">
+        <!-- Search and Filter Section -->
+        <div class="search-container">
+            <h1>Browse Clothes</h1>
+            
+            <!-- User Tabs -->
+            <div class="user-tabs">
+                <button class="user-tab-btn active" onclick="switchUserTab('browse')">🛍️ Browse</button>
+            </div>
+
+            <!-- Browse Tab -->
+            <div id="browseTab" class="user-tab-content active">
+                <!-- Category Filter -->
+                <div class="category-filter">
+                    <button class="category-btn active" data-category="all">All</button>
+                    <button class="category-btn" data-category="tops">Tops</button>
+                    <button class="category-btn" data-category="bottoms">Bottoms</button>
+                    <button class="category-btn" data-category="shoes">Shoes</button>
+                <button class="category-btn" data-category="accessories">Accessories</button>
+            </div>
+
+            <div class="search-filters">
+                <input type="text" id="searchBrand" placeholder="Search by brand..." class="search-input">
+                <select id="filterColor" class="filter-select">
+                    <option value="">All Colors</option>
+                    <option value="Red">Red</option>
+                    <option value="Blue">Blue</option>
+                    <option value="Black">Black</option>
+                    <option value="White">White</option>
+                    <option value="Green">Green</option>
+                    <option value="Yellow">Yellow</option>
+                    <option value="Purple">Purple</option>
+                    <option value="Orange">Orange</option>
+                </select>
+                <select id="filterSize" class="filter-select">
+                    <option value="">All Sizes</option>
+                    <option value="XS">XS</option>
+                    <option value="S">S</option>
+                    <option value="M">M</option>
+                    <option value="L">L</option>
+                    <option value="XL">XL</option>
+                    <option value="XXL">XXL</option>
+                </select>
+                <select id="sortPrice" class="filter-select">
+                    <option value="">Sort by Price</option>
+                    <option value="low-high">Lowest to Highest</option>
+                    <option value="high-low">Highest to Lowest</option>
+                </select>
+                <button id="clearFiltersBtn" class="btn btn-secondary">Clear Filters</button>
+            </div>
+        </div>
+
+        <!-- Clothes Grid -->
+        <div id="clothesGrid" class="grid-container">
+            <!-- Clothes cards will be dynamically added here -->
+        </div>
+
+        <!-- No Results Message -->
+        <div id="noResults" class="no-results" style="display: none;">
+            <p>No clothes found. Try adjusting your filters.</p>
+        </div>
+            </div>
+    </section>
+
+    <!-- Clothes Details Modal (User) -->
+    <div id="clothDetailsModal" class="modal">
+        <div class="modal-content details-modal">
+            <button class="close-btn" onclick="closeClothDetails()">&times;</button>
+            <div class="details-container">
+                <div class="details-image">
+                    <img id="detailsImage" src="" alt="Cloth">
+                </div>
+                <div class="details-info">
+                    <h2 id="detailsBrand"></h2>
+                    <div class="detail-item">
+                        <strong>Cloth ID:</strong> <span id="detailsId"></span>
+                    </div>
+                    <div class="detail-item">
+                        <strong>Color:</strong> <span id="detailsColor"></span>
+                    </div>
+                    <div class="detail-item">
+                        <strong>Size:</strong> <span id="detailsSize"></span>
+                    </div>
+                    <div class="detail-item" id="detailsPriceContainer" style="display: none;">
+                        <strong>Price:</strong> <span id="detailsPrice"></span>
+                    </div>
+                    <div class="detail-item" id="detailsDescriptionContainer" style="display: none;">
+                        <strong>Description:</strong> <span id="detailsDescription"></span>
+                    </div>
+                    <div class="likes-section">
+                        <button id="wishlistBtn" class="btn btn-secondary like-btn">🛍️ Wishlist</button>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Reviews Section -->
+            <div class="reviews-section">
+                <h3>Customer Reviews</h3>
+                <div class="add-review">
+                    <div class="review-inputs">
+                        <input type="text" id="reviewerName" placeholder="Your Name (optional)">
+                        <select id="reviewRating" class="filter-select">
+                            <option value="">Rate this product</option>
+                            <option value="5">⭐⭐⭐⭐⭐ 5 Stars</option>
+                            <option value="4">⭐⭐⭐⭐ 4 Stars</option>
+                            <option value="3">⭐⭐⭐ 3 Stars</option>
+                            <option value="2">⭐⭐ 2 Stars</option>
+                            <option value="1">⭐ 1 Star</option>
+                        </select>
+                    </div>
+                    <textarea id="reviewText" placeholder="Share your review about this product..." style="width: 100%; padding: 0.8rem; border: 2px solid #E8D5D5; border-radius: 5px; font-family: inherit; resize: vertical; min-height: 80px;"></textarea>
+                    <button id="addReviewBtn" class="btn btn-primary">Post Review</button>
+                </div>
+                <div id="reviewsList" class="reviews-list">
+                    <!-- Reviews will be added dynamically -->
+                </div>
+            </div>
+
+            <!-- Social Share Section -->
+            <div class="share-section">
+                <button id="shareBtn" class="btn btn-primary">📤 Share</button>
+                <span id="shareMessage" style="margin-left: 1rem; color: #4CAF50; display: none;">Link copied!</span>
+            </div>
+        </div>
+    </div>
+
+    <!-- Owner Section -->
+    <section id="ownerSection" class="section">
+        <!-- Owner Dashboard -->
+        <div id="ownerDashboard" style="display: none;">
+            <div class="dashboard-header">
+                <h1>Owner Dashboard</h1>
+                <div class="dashboard-buttons">
+                    <button id="addClothBtn" class="btn btn-primary">+ Add New Cloth</button>
+                    <button id="showAllProductsBtn" class="btn btn-secondary">📋 Show All Products</button>
+                </div>
+            </div>
+
+            <!-- Dashboard Tabs -->
+            <div class="dashboard-tabs">
+                <button class="tab-btn active" onclick="switchDashboardTab('overview')">📊 Overview</button>
+                <button class="tab-btn" onclick="switchDashboardTab('analytics')">📈 Analytics</button>
+                <button class="tab-btn" onclick="switchDashboardTab('inventory')">📦 Inventory</button>
+                <button class="tab-btn" onclick="switchDashboardTab('reports')">📄 Reports</button>
+            </div>
+
+            <!-- Overview Tab -->
+            <div id="overviewTab" class="dashboard-tab-content active">
+                <!-- Statistics Cards -->
+                <div class="stats-container">
+                    <div class="stat-card">
+                        <h3 id="totalClothes">0</h3>
+                        <p>Total Clothes</p>
+                    </div>
+                    <div class="stat-card profit-card">
+                        <h3 id="todayProfit">₹ 0</h3>
+                        <p>Today's Profit</p>
+                    </div>
+                    <div class="stat-card">
+                        <h3 id="totalSold">0</h3>
+                        <p>Products Sold</p>
+                    </div>
+                    <div class="stat-card">
+                        <h3 id="totalRevenue">₹ 0</h3>
+                        <p>Total Revenue</p>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Analytics Tab -->
+            <div id="analyticsTab" class="dashboard-tab-content" style="display: none;">
+                <h2>📈 Sales Analytics</h2>
+                <div class="analytics-grid">
+                    <div class="analytics-card">
+                        <h3 id="avgSalePrice">₹ 0</h3>
+                        <p>Average Sale Price</p>
+                    </div>
+                    <div class="analytics-card">
+                        <h3 id="totalTransactions">0</h3>
+                        <p>Total Transactions</p>
+                    </div>
+                    <div class="analytics-card">
+                        <h3 id="highestSale">₹ 0</h3>
+                        <p>Highest Sale</p>
+                    </div>
+                    <div class="analytics-card">
+                        <h3 id="lowestSale">₹ 0</h3>
+                        <p>Lowest Sale</p>
+                    </div>
+                </div>
+                <button class="btn btn-primary" onclick="downloadAnalyticsReport()">📥 Download Analytics</button>
+            </div>
+
+            <!-- Inventory Tab -->
+            <div id="inventoryTab" class="dashboard-tab-content" style="display: none;">
+                <h2>📦 Inventory Management</h2>
+                <div class="inventory-alerts">
+                    <h3>⚠️ Low Stock Alert</h3>
+                    <div id="lowStockList" class="low-stock-items">
+                        <!-- Low stock items will be listed here -->
+                    </div>
+                </div>
+                <div class="inventory-summary">
+                    <h3>📊 Inventory Summary</h3>
+                    <div id="inventorySummary" class="summary-table">
+                        <!-- Summary will be shown here -->
+                    </div>
+                </div>
+            </div>
+
+            <!-- Reports Tab -->
+            <div id="reportsTab" class="dashboard-tab-content" style="display: none;">
+                <h2>📄 Reports & Export</h2>
+                <div class="reports-section">
+                    <button class="btn btn-primary" onclick="generateSalesReport()">📊 Sales Report</button>
+                    <button class="btn btn-secondary" onclick="generateInventoryReport()">📦 Inventory Report</button>
+                    <button class="btn btn-success" onclick="generateIncomeReport()">💰 Income Report</button>
+                    <button class="btn btn-warning" onclick="exportToCSV()">📥 Export to CSV</button>
+                </div>
+                <div id="reportContent" class="report-content">
+                    <!-- Report content will be displayed here -->
+                </div>
+            </div>
+
+            <!-- Sold Products Section -->
+            <div class="sold-products-section">
+                <h2>📦 Sold Products <span style="font-size: 0.8rem; color: #999;">(delete record after 24 hr)</span></h2>
+                <div id="soldProductsList" class="sold-products-list">
+                    <!-- Sold products will be listed here -->
+                </div>
+            </div>
+
+            <!-- Search Clothes by ID -->
+            <div class="search-container admin-search">
+                <h2>🔍 Search Product by ID</h2>
+                <div class="search-box-container">
+                    <input type="text" id="adminSearchId" placeholder="Enter Cloth ID (e.g., CLT001)" class="admin-search-input">
+                    <button type="button" id="adminSearchBtn" class="btn btn-primary" onclick="performAdminSearch()">Search</button>
+                    <button type="button" id="clearSearchBtn" class="btn btn-secondary" onclick="clearAdminSearch()">Clear</button>
+                </div>
+            </div>
+
+            <!-- Search Results Container -->
+            <div id="searchResultsContainer" class="search-results-section" style="display: none;">
+                <div id="searchResultProduct" class="search-result-product">
+                    <!-- Searched product will display here with sold/receive options -->
+                </div>
+            </div>
+
+            <!-- All Products Container (shown when "Show All Products" is clicked) -->
+            <div id="allProductsContainer" class="table-container" style="display: none;">
+                <h2>📋 All Products</h2>
+                <button id="hideAllProductsBtn" class="btn btn-secondary" style="margin-bottom: 1rem;">← Back to Search</button>
+                <div id="ownerClothesTable" class="owner-clothes-table">
+                    <!-- Clothes items will be listed here -->
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Product Transaction Modal (Sold/Receive Bag) -->
+    <div id="productTransactionModal" class="modal">
+        <div class="modal-content transaction-modal">
+            <button class="close-btn" onclick="closeProductTransactionModal()">&times;</button>
+            <div class="transaction-container">
+                <img id="transProductImage" src="" alt="Product" class="transaction-image">
+                <div class="transaction-details">
+                    <h2 id="transProductBrand">Product Name</h2>
+                    <div class="trans-meta">ID: <span id="transProductId">CLT001</span></div>
+                    <div class="trans-meta">Color: <span id="transProductColor">Red</span> | Size: <span id="transProductSize">M</span></div>
+                    <div class="trans-meta">Stock: <span id="transProductStock">10</span> units</div>
+                    
+                    <div class="trans-price-section">
+                        <div class="trans-price">
+                            <label>Price:</label>
+                            <h3 id="transProductPrice">₹ 0.00</h3>
+                        </div>
+                        <div class="trans-discount">
+                            <label for="discountPercent">Discount %:</label>
+                            <input type="number" id="discountPercent" min="0" max="100" value="0" class="discount-input">
+                            <div id="finalPrice" class="final-price">Final: ₹ 0.00</div>
+                        </div>
+                    </div>
+
+                    <div class="transaction-actions">
+                        <button id="soldBtn" class="btn btn-success btn-large">✓ Mark as Sold</button>
+                        <button id="receiveBagBtn" class="btn btn-primary btn-large">🛍️ Receive Bag</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Add Cloth Modal -->
+    <div id="addClothModal" class="modal">
+        <div class="modal-content">
+            <button class="close-btn" onclick="closeAddClothModal()">&times;</button>
+            <h2>Add New Cloth</h2>
+            <form id="addClothForm">
+                <label for="clothImage">Upload Image:</label>
+                <input type="file" id="clothImage" accept="image/*" required>
+
+                <label for="clothBrand">Brand Name:</label>
+                <input type="text" id="clothBrand" placeholder="E.g., Nike, Adidas..." required>
+
+                <label for="clothColor">Color:</label>
+                <select id="clothColor" required>
+                    <option value="">Select Color</option>
+                    <option value="Red">Red</option>
+                    <option value="Blue">Blue</option>
+                    <option value="Black">Black</option>
+                    <option value="White">White</option>
+                    <option value="Green">Green</option>
+                    <option value="Yellow">Yellow</option>
+                    <option value="Purple">Purple</option>
+                    <option value="Orange">Orange</option>
+                </select>
+
+                <label for="clothSize">Size:</label>
+                <select id="clothSize" required>
+                    <option value="">Select Size</option>
+                    <option value="XS">XS</option>
+                    <option value="S">S</option>
+                    <option value="M">M</option>
+                    <option value="L">L</option>
+                    <option value="XL">XL</option>
+                    <option value="XXL">XXL</option>
+                </select>
+
+                <label for="clothCategory">Category:</label>
+                <select id="clothCategory" required>
+                    <option value="">Select Category</option>
+                    <option value="tops">Tops</option>
+                    <option value="bottoms">Bottoms</option>
+                    <option value="shoes">Shoes</option>
+                    <option value="accessories">Accessories</option>
+                </select>
+
+                <label for="clothStock">Stock Quantity:</label>
+                <input type="number" id="clothStock" placeholder="E.g., 50" min="0" required>
+
+                <label for="clothPrice">Price (Optional):</label>
+                <input type="number" id="clothPrice" placeholder="E.g., 50.00" step="0.01">
+
+                <label for="clothDescription">Description (Optional):</label>
+                <textarea id="clothDescription" placeholder="Add description..."></textarea>
+
+                <button type="submit" class="btn btn-primary">Add Cloth</button>
+            </form>
+        </div>
+    </div>
+
+    <!-- Edit Cloth Modal -->
+    <div id="editClothModal" class="modal">
+        <div class="modal-content">
+            <button class="close-btn" onclick="closeEditClothModal()">&times;</button>
+            <h2>Edit Cloth</h2>
+            <form id="editClothForm">
+                <input type="hidden" id="editClothId">
+
+                <label for="editClothImage">Upload New Image (optional):</label>
+                <input type="file" id="editClothImage" accept="image/*">
+                <div id="currentImagePreview" class="image-preview"></div>
+
+                <label for="editClothBrand">Brand Name:</label>
+                <input type="text" id="editClothBrand" required>
+
+                <label for="editClothColor">Color:</label>
+                <select id="editClothColor" required>
+                    <option value="">Select Color</option>
+                    <option value="Red">Red</option>
+                    <option value="Blue">Blue</option>
+                    <option value="Black">Black</option>
+                    <option value="White">White</option>
+                    <option value="Green">Green</option>
+                    <option value="Yellow">Yellow</option>
+                    <option value="Purple">Purple</option>
+                    <option value="Orange">Orange</option>
+                </select>
+
+                <label for="editClothSize">Size:</label>
+                <select id="editClothSize" required>
+                    <option value="">Select Size</option>
+                    <option value="XS">XS</option>
+                    <option value="S">S</option>
+                    <option value="M">M</option>
+                    <option value="L">L</option>
+                    <option value="XL">XL</option>
+                    <option value="XXL">XXL</option>
+                </select>
+
+                <label for="editClothCategory">Category:</label>
+                <select id="editClothCategory" required>
+                    <option value="">Select Category</option>
+                    <option value="tops">Tops</option>
+                    <option value="bottoms">Bottoms</option>
+                    <option value="shoes">Shoes</option>
+                    <option value="accessories">Accessories</option>
+                </select>
+
+                <label for="editClothStock">Stock Quantity:</label>
+                <input type="number" id="editClothStock" min="0" required>
+
+                <label for="editClothPrice">Price (Optional):</label>
+                <input type="number" id="editClothPrice" step="0.01">
+
+                <label for="editClothDescription">Description (Optional):</label>
+                <textarea id="editClothDescription"></textarea>
+
+                <button type="submit" class="btn btn-primary">Update Cloth</button>
+            </form>
+        </div>
+    </div>
+
+    <!-- All Comments Modal (Owner) -->
+    <div id="allCommentsModal" class="modal">
+        <div class="modal-content comments-modal">
+            <button class="close-btn" onclick="closeAllComments()">&times;</button>
+            <h2>All Comments</h2>
+            <div id="allCommentsList" class="all-comments-list">
+                <!-- Comments will be listed here -->
+            </div>
+        </div>
+    </div>
+
+    <script src="script.js"></script>
+</body>
+</html>
